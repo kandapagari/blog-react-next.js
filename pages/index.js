@@ -1,12 +1,10 @@
 import Head from 'next/head'
 import { PostCard, Categories, PostWidget } from '../components';
+import { getPost } from '../services';
 
-const posts = [
-    { title: 'Hello Next.js', excerpt: 'This is my first post' },
-    { title: 'Hello React.js', excerpt: 'This is my seccond post' },
-];
 
-export default function main() {
+
+export default function Home( {posts} ) {
     return (
         <div className="container mx-auto px-10 mb-8">
             <Head>
@@ -16,7 +14,7 @@ export default function main() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div className="lg:col-span-8 col-span-1">
                     {posts.map((post) => (
-                        <PostCard key={post.title} post={post} />
+                        <PostCard key={post.title} post={post.node} />
                     ))}
                 </div>
                 <div className="lg:col-span-4 col-span-1">
@@ -28,4 +26,14 @@ export default function main() {
             </div>
         </div>
     )
+}
+
+export async function getStaticProps() {
+    const posts = (await getPost()) || [];
+
+    return {
+        props: {
+            posts
+        }
+    }
 }
